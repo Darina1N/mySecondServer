@@ -28,7 +28,7 @@ public class Controller {
     }
 
     @RequestMapping(path="/hi/{username}")
-    public String getHiWithName(@PathVariable String username){
+    public String getHiWithName(@PathVariable String username){//ak očakávam určitú hodnotu na vstupe
         return "<h2>Hi "+username+" What are you doing? </h2>";
     }
 
