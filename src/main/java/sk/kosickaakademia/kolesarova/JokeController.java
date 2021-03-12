@@ -2,11 +2,11 @@ package sk.kosickaakademia.kolesarova;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,5 +64,22 @@ public class JokeController {
             status = 200;
         }
         return ResponseEntity.status(status).contentType(MediaType.APPLICATION_JSON).body(jsonObject.toJSONString());
+    }
+
+    @PostMapping("/joke/add")
+    public ResponseEntity<String> addNewJoke(@RequestBody String input) {
+        try {
+            JSONObject jsonObject = (JSONObject) new JSONParser().parse(input);
+            String newJoke = String.valueOf(jsonObject.get("joke"));
+            list.add(newJoke);
+            return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body(newJoke.toString());
+        } catch (ParseException parseException) {
+            parseException.printStackTrace();
+        } catch (NumberFormatException exception) {
+            JSONObject object = new JSONObject();
+            object.put("ERROR", "Bad request.");
+            return ResponseEntity.status(400).contentType(MediaType.APPLICATION_JSON).body(object.toJSONString());
+        }
+        return null;
     }
 }
